@@ -9,28 +9,29 @@ import {
   type PartialGlobalConfig
 } from 'vuestic-ui'
 import { markRaw, computed, watch, type Ref } from 'vue'
-import { useHead, ReactiveHead, defineNuxtPlugin, useCookie  } from '#imports'
+import type { VuesticOptions } from '../types'
+import { useHead, ReactiveHead, defineNuxtPlugin, useCookie } from '#imports'
 import NuxtLink from '#app/components/nuxt-link'
 import configFromFile from '#vuestic-config'
-
-import type { VuesticOptions } from '../types'
+import { useRuntimeConfig } from '#app'
 
 function getGlobalProperty (app, key) {
   return app.config.globalProperties[key]
 }
 
-export default defineNuxtPlugin(async (nuxtApp) => {
+export default defineNuxtPlugin((nuxtApp) => {
   const { vueApp: app } = nuxtApp
 
-  // It's important to use `, because TS will compile qoutes to " and JSON will not be parsed...
-  const moduleOptions: VuesticOptions = JSON.parse(`<%= options.value %>`)
-  const themeCookie = useCookie(moduleOptions.themeCookieKey)
-  const userConfig = configFromFile || moduleOptions.config || {}
+  // Ignore
+  const moduleOptionsConfig: VuesticOptions['config'] = (useRuntimeConfig() as any).public['#vuestic-public-options-config']
+  const moduleOptionsThemeCookieKey: VuesticOptions['themeCookieKey'] = (useRuntimeConfig() as any).public['#vuestic-public-options-theme-cookie-key']
+  const themeCookie = useCookie(moduleOptionsThemeCookieKey)
+  const userConfig = configFromFile || moduleOptionsConfig || {}
   const configWithColors: PartialGlobalConfig = {
     ...userConfig,
     colors: {
       currentPresetName: themeCookie.value || userConfig.colors?.currentPresetName || 'light',
-      ...userConfig.colors,
+      ...userConfig.colors
     }
   }
 
@@ -44,7 +45,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       VaDropdownPlugin,
       VaToastPlugin,
       VaModalPlugin,
-      ColorsClassesPlugin,
+      ColorsClassesPlugin
     },
     /** Do not import any components. Nuxt will import them automatically */
     components: {}

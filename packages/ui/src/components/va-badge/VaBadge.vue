@@ -21,7 +21,6 @@
 
 <script lang="ts" setup>
 import { computed, unref, useSlots } from 'vue'
-import pick from 'lodash/pick.js'
 
 import {
   useBem,
@@ -32,6 +31,7 @@ import {
 } from '../../composables'
 
 import { useFloatingPosition, useFloatingPositionProps } from './hooks/useFloatingPositionStyles'
+import { pick } from '../../utils/pick'
 
 defineOptions({
   name: 'VaBadge',
@@ -101,6 +101,7 @@ const ariaLabelledByComputed = computed(() => props.text ? String(props.text) : 
     line-height: var(--va-badge-text-wrapper-line-height);
     letter-spacing: var(--va-badge-text-wrapper-letter-spacing, var(--va-letter-spacing));
     justify-content: var(--va-badge-text-wrapper-justify-content);
+    align-items: center;
     white-space: var(--va-badge-text-wrapper-white-space);
     width: var(--va-badge-text-wrapper-width);
     height: var(--va-badge-text-wrapper-height);

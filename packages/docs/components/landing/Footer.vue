@@ -71,6 +71,11 @@
           •
           <a href="https://www.iubenda.com/privacy-policy/50799764/cookie-policy" title="Privacy Policy ">Cookie Policy</a>
         </div>
+        <div class="mt-4">
+          <a href="https://www.netlify.com">
+            <img src="https://www.netlify.com/v3/img/components/netlify-light.svg" alt="Deploys by Netlify">
+          </a>
+        </div>
       </div>
       <!--<LandingNewsBanner />-->
     </div>
@@ -115,6 +120,7 @@ const sitemap = computed(() => ([
   {
     title: 'Support',
     items: [
+      { label: 'Support & Consulting', component: 'router-link', prop: 'to', value: '/support/consulting' },
       { label: 'Give us a star\u00A0\u2B50', component: 'a', prop: 'href', value: 'https://github.com/epicmaxco/vuestic-ui/' },
       { label: 'Report an issue', component: 'a', prop: 'href', value: 'https://github.com/epicmaxco/vuestic-ui/issues/new/choose' },
       { label: 'Contribute', component: 'router-link', prop: 'to', value: '/contribution/guide' },

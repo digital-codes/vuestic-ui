@@ -41,15 +41,13 @@
       ref="input"
       class="va-input__content__input"
       v-bind="{ ...computedInputAttributes, ...inputEvents }"
-      :value="computedValue"
+      v-model="valueComputed"
     >
   </va-input-wrapper>
 </template>
 
 <script lang="ts">
 import { computed, InputHTMLAttributes, shallowRef, toRefs, useAttrs, useSlots, watch, PropType } from 'vue'
-import omit from 'lodash/omit.js'
-import pick from 'lodash/pick.js'
 
 import { extractComponentProps, filterComponentProps } from '../../utils/component-options'
 
@@ -64,13 +62,14 @@ import {
   useFocusable, useFocusableProps, useEvent,
 } from '../../composables'
 import type { ValidationProps } from '../../composables/useValidation'
-import { useCleave, useCleaveProps } from './hooks/useCleave'
 
 import type { AnyStringPropType } from '../../utils/types/prop-type'
 
 import { VaInputWrapper } from '../va-input-wrapper'
 import { VaIcon } from '../va-icon'
 import { combineFunctions } from '../../utils/combine-functions'
+import { omit } from '../../utils/omit'
+import { pick } from '../../utils/pick'
 
 const VaInputWrapperProps = extractComponentProps(VaInputWrapper)
 
@@ -91,7 +90,6 @@ const { createEmits: createFieldEmits, createListeners: createFieldListeners } =
 
 defineOptions({
   name: 'VaInput',
-  inheritAttrs: false,
 })
 
 const props = defineProps({
@@ -100,7 +98,6 @@ const props = defineProps({
   ...useFocusableProps,
   ...useValidationProps as ValidationProps<string>,
   ...useClearableProps,
-  ...useCleaveProps,
   ...useComponentPresetProp,
   ...useStatefulProps,
 
@@ -174,14 +171,11 @@ const {
   clearIconProps,
 } = useClearable(props, modelValue, input, computedError)
 
-const { computedValue, onInput } = useCleave(input, props, valueComputed)
-
 const inputListeners = createInputListeners(emit)
 
 const inputEvents = {
   ...inputListeners,
   onBlur: combineFunctions(onBlur, inputListeners.onBlur),
-  onInput: combineFunctions(onInput, inputListeners.onInput),
 }
 
 const setInputValue = (newValue: string) => {
@@ -208,7 +202,7 @@ const setInputValue = (newValue: string) => {
   target.setSelectionRange(selectionStart, selectionEnd)
 }
 
-watch(computedValue, (newValue) => {
+watch(valueComputed, (newValue) => {
   setInputValue(String(newValue))
 }, { immediate: true })
 
@@ -229,16 +223,16 @@ const computedChildAttributes = computed(() => (({
   'aria-disabled': props.disabled,
   'aria-readonly': props.readonly,
   ...validationAriaAttributes.value,
-  ...omit(attrs, ['class', 'style']),
 }) as InputHTMLAttributes))
 
 const computedInputAttributes = computed(() => (({
   ...computedChildAttributes.value,
-  ...pick(props, ['type', 'disabled', 'readonly', 'placeholder', 'pattern', 'inputmode', 'minlength', 'maxlength', 'name']),
+  ...pick(props, ['type', 'disabled', 'readonly', 'placeholder', 'pattern', 'inputmode', 'name']),
+  ...pick(attrs, ['minlength', 'minlength']),
 }) as InputHTMLAttributes))
 
 const valueLengthComputed = computed(() =>
-  props.counter && typeof computedValue.value === 'string' ? computedValue.value.length : undefined,
+  props.counter && typeof valueComputed.value === 'string' ? valueComputed.value.length : undefined,
 )
 
 const onFieldClick = (e: MouseEvent) => {

@@ -78,7 +78,6 @@
 
 <script lang="ts" setup>
 import { PropType, ref, shallowRef, watch, computed, ComponentPublicInstance, ComputedRef } from 'vue'
-import pick from 'lodash/pick.js'
 
 import {
   useComponentPresetProp,
@@ -97,6 +96,7 @@ import { isNilValue } from '../../../../utils/isNilValue'
 
 import type { SelectOption, EventSource } from '../../types'
 import { unwrapEl } from '../../../../utils/unwrapEl'
+import { pick } from '../../../../utils/pick'
 
 defineOptions({
   name: 'VaSelectOptionList',
@@ -136,7 +136,7 @@ const focus = () => {
 const rootHeight = computed(() => root.value?.clientHeight ?? 200)
 
 const handleScrollToBottom = () => emit('scroll-bottom')
-const onScroll = (event: UIEvent) => {
+const onScroll = (event: Event) => {
   const target = event.target as Element
   if (!target) { return }
 

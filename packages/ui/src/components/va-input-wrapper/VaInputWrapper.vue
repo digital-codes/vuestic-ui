@@ -119,7 +119,6 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
-import pick from 'lodash/pick.js'
 
 import {
   useBem,
@@ -140,6 +139,7 @@ import { extractComponentProps, filterComponentProps } from '../../utils/compone
 
 import { useInputFieldAria, useInputFieldAriaProps } from './hooks/useInputFieldAria'
 import { WithSlotInheritance } from '../../utils/with-slot-inheritance'
+import { pick } from '../../utils/pick'
 
 const VaInputLabelProps = extractComponentProps(VaInputLabel)
 
@@ -348,6 +348,14 @@ export default defineComponent({
     caret-color: var(--va-input-wrapper-text-color);
     color: var(--va-input-wrapper-text-color);
 
+    input,
+    textarea {
+      &::placeholder {
+        color: inherit;
+        opacity: 0.5;
+      }
+    }
+
     input {
       @include va-scroll(var(--va-input-scroll-color));
 
@@ -366,11 +374,6 @@ export default defineComponent({
       letter-spacing: var(--va-input-letter-spacing);
       cursor: inherit;
       align-self: stretch;
-
-      &::placeholder {
-        color: inherit;
-        opacity: 0.5;
-      }
     }
   }
 

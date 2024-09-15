@@ -132,6 +132,27 @@ export const navigationRoutes: NavigationRoute[] = [
     ],
   },
   {
+    name: 'composables',
+    displayName: 'Composables',
+    disabled: true,
+    children: [
+      {
+        name: 'input-mask',
+        displayName: 'Input Mask',
+        meta: {
+          badge: navigationBadge.new('1.10.0'),
+        },
+      },
+      {
+        name: 'sticky-table-headers',
+        displayName: 'Sticky Table Headers',
+        meta: {
+          badge: navigationBadge.new('1.10.0'),
+        },
+      }
+    ]
+  },
+  {
     name: "ui-elements",
     displayName: "UI Elements",
     disabled: true,
@@ -428,6 +449,13 @@ export const navigationRoutes: NavigationRoute[] = [
         }
       },
       {
+        name: 'sticky-scrollbar',
+        displayName: 'Sticky Scrollbar',
+        meta: {
+          badge : navigationBadge.new('1.9.10'),
+        }
+      },
+      {
         name: "hover",
         displayName: "Hover",
       },
@@ -516,32 +544,6 @@ export const navigationRoutes: NavigationRoute[] = [
     ],
   },
   {
-    name: "contribution",
-    displayName: "Contribution",
-    children: [
-      {
-        name: "guide",
-        displayName: "Guide",
-      },
-      {
-        name: "ui-element-guide",
-        displayName: "UI Element Guide",
-      },
-      {
-        name: "structure",
-        displayName: "Structure",
-      },
-      {
-        name: "documentation-page",
-        displayName: "Documentation Guide",
-      },
-      {
-        name: "tree-shaking-requirements",
-        displayName: "Tree Shaking Requirements",
-      },
-    ],
-  },
-  {
     name: "services",
     displayName: "Services",
     children: [
@@ -577,6 +579,39 @@ export const navigationRoutes: NavigationRoute[] = [
         displayName: "I18n",
       },
     ],
+  },
+  {
+    name: "compiler",
+    displayName: "Compiler",
+    meta: {
+      badge: navigationBadge.new('1.10.0'),
+    },
+    children: [
+      {
+        name: 'devtools',
+        displayName: 'Devtools',
+        meta: {
+          badge: navigationBadge.wip('1.10.0'),
+        },
+        path: '/compiler/devtools',
+      },
+      {
+        name: 'css-layers',
+        displayName: 'CSS Layers',
+        meta: {
+          badge: navigationBadge.new('1.10.0'),
+        },
+        path: '/compiler/css-layers',
+      },
+      {
+        name: 'vuestic-config',
+        displayName: 'Config',
+        meta: {
+          badge: navigationBadge.new('1.10.0'),
+        },
+        path: '/compiler/vuestic-config',
+      }
+    ]
   },
   {
     name: "extensions",
@@ -619,4 +654,46 @@ export const navigationRoutes: NavigationRoute[] = [
       }
     ],
   },
+  {
+    name: "contribution",
+    displayName: "Contribution",
+    children: [
+      {
+        name: "guide",
+        displayName: "Guide",
+      },
+      {
+        name: "ui-element-guide",
+        displayName: "UI Element Guide",
+      },
+      {
+        name: "structure",
+        displayName: "Structure",
+      },
+      {
+        name: "documentation-page",
+        displayName: "Documentation Guide",
+      },
+      {
+        name: "tree-shaking-requirements",
+        displayName: "Tree Shaking Requirements",
+      },
+    ],
+  },
+  {
+    name: "support",
+    displayName: "Support",
+    disabled: true,
+    children: [
+      {
+        name: "discord",
+        displayName: "Discord",
+        path: 'https://discord.com/invite/u7fQdqQt8c'
+      },
+      {
+        name: "consulting",
+        displayName: "Support & Consulting",
+      },
+    ]
+  }
 ];
