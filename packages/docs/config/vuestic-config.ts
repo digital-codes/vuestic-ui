@@ -13,6 +13,36 @@ const VaButtonLandingHeader = {
   'hover-opacity': '1',
 }
 
+const halloweenColors = {
+  primary: '#e36414',
+  secondary: '#EDE8E8',
+  success: '#3D9209',
+  info: '#158DE3',
+  danger: '#E42222',
+  warning: '#FFD43A',
+
+  // Background Colors
+  backgroundPrimary: '#000',
+  backgroundSecondary: '#210505',
+  backgroundElement: '#941b0c',
+  backgroundBorder: '#621708',
+  backgroundSidebar: '#130C0C',
+  backgroundLanding: '#f4f9fc',
+  backgroundLandingBorder: 'rgba(155, 179, 206, 0.8)',
+  textPrimary: '#FFFFFF',
+  textInverted: '#FFFFFF',
+  shadow: 'rgba(0, 0, 0, 0.30)',
+
+  header: '#b44f10',
+  preview1: '#a74a11',
+  preview2: '#a72e16',
+  partners: '#621708',
+  customize1: '#210505',
+  customize2: '#000000',
+  seamless: '#38120a',
+  admin: '#481308',
+}
+
 export const VuesticConfig = defineVuesticConfig({
   icons,
   components: {
@@ -25,6 +55,9 @@ export const VuesticConfig = defineVuesticConfig({
     },
     VaBacktop: {
       target: scrollWrapperSelector,
+    },
+    VaSidebar: {
+      color: 'backgroundSidebar',
     },
     presets: {
       VaButton: {
@@ -47,18 +80,20 @@ export const VuesticConfig = defineVuesticConfig({
   },
   colors: {
     presets: {
+      // Halloween colors
       light: {
         secondary: '#666E75',
         backgroundPrimary: '#FFFFFF',
         backgroundLanding: '#f4f9fc',
         backgroundLandingBorder: 'rgba(155, 179, 206, 0.8)',
+        backgroundSidebar: '#ECF0F1',
       },
       dark: {
-        // TODO: Check color contrast:  current primary is bad
-        // primary: '#5389F3',
         secondary: '#818992',
         backgroundLanding: '#070d14',
         backgroundLandingBorder: 'rgba(43, 49, 56, 0.8)',
+        backgroundSidebar: '#131A22',
+        shadow: 'rgba(0, 0, 0, 0.12)',
       },
       landing: {
         primary: '#1827A7',
@@ -81,7 +116,18 @@ export const VuesticConfig = defineVuesticConfig({
         // Misc
         shadow: 'rgba(0, 0, 0, 0.12)',
         focus: '#49A8FF',
+
+        // Landing colors
+        header: "#2450BE",
+        preview1: "#2450BE",
+        preview2: "#557DE2",
+        partners: "#335DC9",
+        customize1: "#4D2CC1",
+        customize2: "#847EE2",
+        seamless: "#F4F9FC",
+        admin: "#F4F9FC",
       },
+      halloween: halloweenColors,
     },
   },
 })

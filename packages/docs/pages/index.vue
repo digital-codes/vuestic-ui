@@ -4,7 +4,7 @@
     <div v-show="!isMobileMenuOpen">
       <LandingPreview />
       <LandingPartners />
-      <LandingBannersVuejsDeConference />
+      <LandingBannersScheduleACall />
       <LandingFeatures />
       <LandingCustomize />
       <LandingSeamlessIntegration />
@@ -31,7 +31,6 @@ const isMobileMenuOpen = ref(false);
 
 <style lang="scss">
 @import "vuestic-ui/src/styles/typography/typography.scss";
-@import "@/assets/variables.scss";
 @import "@/assets/reset";
 
 .landing {

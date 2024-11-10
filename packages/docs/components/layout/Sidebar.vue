@@ -1,7 +1,7 @@
 <template>
   <VaSidebar
     v-model="writableVisible"
-    class="sidebar"
+    class="sidebar docs-sidebar"
     :width="sidebarWidth"
   >
     <VaAccordion

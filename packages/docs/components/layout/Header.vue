@@ -7,7 +7,7 @@
 
     <VaNavbar
       v-show="!isOptionsVisible"
-      class="header"
+      class="header docs-header"
       color="background-secondary"
     >
       <template #left>
@@ -44,7 +44,7 @@
           >
             {{ link.text }}
           </VaButton>
-          <ColorDropdown class="mr-2" />
+          <!-- <ColorDropdown class="mr-2" /> -->
           <ThemeSwitch class="mr-4" />
           <VersionDropdown />
         </div>

@@ -1,9 +1,10 @@
 <template>
   <div
     class="docs-layout"
+    :class="[`docs-layout--theme-${currentPresetName}`]"
   >
     <div
-      v-if="false"
+      v-show="doShowLoader"
       class="docs-layout__loader"
     />
     <VaLayout
@@ -41,8 +42,11 @@
 <script setup lang="ts">
 const breakpoints = useBreakpoint()
 
+const { currentPresetName } = useColors()
+
 const isSidebarVisible = ref(!breakpoints.smDown)
 const isOptionsVisible = ref(false)
+const doShowLoader = ref(true)
 
 watch(() => breakpoints.smDown, (newValue: boolean) => {
   isSidebarVisible.value = !newValue
@@ -57,9 +61,49 @@ afterEach(() => {
   isOptionsVisible.value = false
 })
 
+
+// Halloween background animation
+const mouse = ref({ x: 0, y: 0 })
+const mouseInertia = ref({ x: 0, y: 0 })
+
+const onMouseMove = (e: MouseEvent) => {
+  mouse.value = { x: e.clientX, y: e.clientY }
+  mouseInertia.value = {
+    x: mouseInertia.value.x * 0.9 + (mouse.value.x - mouseInertia.value.x) * 0.1,
+    y: mouseInertia.value.y * 0.9 + (mouse.value.y - mouseInertia.value.y) * 0.1,
+  }
+}
+
 onMounted(() => {
   scrollToElement()
   isSidebarVisible.value = !breakpoints.smDown
+  setTimeout(() => {
+    doShowLoader.value = false
+  }, 300);
+
+  if (window.localStorage.getItem('eventConfig')) {
+    window.localStorage.setItem('eventConfig', 'none')
+  }
+
+  if (currentPresetName.value === 'halloween') {
+    currentPresetName.value = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
+
+  window.addEventListener('mousemove', onMouseMove)
+
+  const resetInertia = () => {
+    mouseInertia.value = {
+      x: mouseInertia.value.x * 0.9 + -1 * 0.1,
+      y: mouseInertia.value.y * 0.9 + -1 * 0.1,
+    }
+    requestAnimationFrame(resetInertia)
+  }
+
+  requestAnimationFrame(resetInertia)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('mousemove', onMouseMove)
 })
 
 useHead({
@@ -90,6 +134,74 @@ html {
 
 .docs-layout {
   font-family: var(--va-font-family);
+  // Halloween background
+  position: relative;
+  z-index: 0;
+
+  &--theme-halloween {
+    &::before {
+      content: '';
+      position: absolute;
+      height: 100%;
+      min-height: 100vh;
+      width: 100%;
+      background-image: url("https://i.imgur.com/rpnciUN.png");
+      background-size: 30%;
+      background-color: #000;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    &::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      background: radial-gradient(circle at v-bind("mouse.x + 'px'") v-bind("mouse.y + 'px'"), transparent 0%, #000 v-bind("(mouseInertia.x + mouseInertia.y) * 0.5 + 'px'"));
+      background-size: 200%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .docs-layout__loader {
+      // Halloween loader
+      background-image: url("https://i.imgur.com/yLvFZoB.png");
+      background-position: center;
+      background-repeat: no-repeat;
+      animation: background-jump 1s infinite;
+    }
+
+    .docs-sidebar {
+      // Halloween background
+      background-image: url("https://i.imgur.com/fLEstk9.png");
+      background-repeat: no-repeat;
+      background-blend-mode: multiply;
+    }
+
+    .docs-header {
+      // Halloween background
+      background-image: url("https://i.imgur.com/BNkuj2J.png");
+      background-position: center;
+      background-blend-mode: multiply;
+    }
+  }
+
+  & > * {
+    z-index: 1;
+  }
+
+  @keyframes background-jump {
+    0% {
+      background-position: center;
+    }
+    50% {
+      background-position: center 45%;
+    }
+    100% {
+      background-position: center;
+    }
+  }
 
   &__loader {
     position: fixed;
@@ -112,7 +224,6 @@ html {
     width: 100%;
     display: flex;
     justify-content: center;
-    background: var(--va-background-primary);
   }
 
   &__page-content {
