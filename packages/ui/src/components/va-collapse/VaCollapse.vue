@@ -81,17 +81,16 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, shallowRef, watch } from 'vue'
 import {
-  useColors, useTextColor,
+  useColors, useElementTextColor,
   useBem,
   useResizeObserver,
   useComponentPresetProp,
   useStateful,
   useStatefulProps,
   useSelectableEmits,
+  useComponentUuid,
 } from '../../composables'
 import { useAccordionItem } from '../va-accordion/hooks/useAccordion'
-
-import { useComponentUuid } from '../../composables/useComponentUuid'
 
 import { VaIcon } from '../va-icon'
 import { pick } from '../../utils/pick'
@@ -121,7 +120,7 @@ const emit = defineEmits(['update:modelValue', ...useSelectableEmits])
 
 const body = shallowRef<HTMLElement>()
 
-const { valueComputed } = useStateful(props, emit, 'modelValue')
+const valueComputed = useStateful(props, emit, 'modelValue')
 
 const { getColor, getTextColor, setHSLAColor } = useColors()
 const { accordionProps, accordionItemValue } = useAccordionItem()
@@ -152,7 +151,7 @@ if (valueComputed.userProvided && !isNilValue(accordionItemValue)) {
 }
 
 const bodyHeight = ref()
-useResizeObserver([body], ([body]) => {
+useResizeObserver(body, ([body]) => {
   bodyHeight.value = body.contentRect.height ?? 0
 })
 
@@ -222,7 +221,7 @@ const toggle = () => {
   computedModelValue.value = !computedModelValue.value
 }
 
-const { textColorComputed } = useTextColor(headerBackground)
+const textColorComputed = useElementTextColor(headerBackground)
 
 const headerStyle = computed(() => ({
   color: textColorComputed.value,

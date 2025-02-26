@@ -136,7 +136,7 @@ const showPagination = ref(false)
 const tabsContentOffset = ref(0)
 const startingXPoint = ref(0)
 const animationIncluded = ref(false)
-const { valueComputed: tabSelected }: { valueComputed: WritableComputedRef<TabSelected> } = useStateful(props, emit)
+const tabSelected: WritableComputedRef<TabSelected> = useStateful(props, emit)
 
 const tabConfig = reactive({
   VaTab: {
@@ -407,8 +407,8 @@ provide(TabsViewKey, {
 
 watch(() => props.modelValue, updateTabsState)
 
-useResizeObserver([wrapper], updatePagination)
-useResizeObserver([container], updateTabsState)
+useResizeObserver(wrapper, updatePagination)
+useResizeObserver(container, updateTabsState)
 
 onMounted(() => {
   requestAnimationFrame(() => {

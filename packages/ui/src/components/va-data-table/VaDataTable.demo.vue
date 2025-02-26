@@ -581,12 +581,11 @@ export default defineComponent({
       }
     })
     const itemsForDateFormatFn: any[] = Array.from(Array(10), (u, i) => {
-      const date = new Date()
       return {
         id: i,
         name: `Number ${i}`,
         idSquared: `The squared index is ${i ** 2}`,
-        date: new Date(date.setDate(i + 1)),
+        date: new Date(1970, 1, i + 1),
       }
     })
     itemsForDateFormatFn[itemsForDateFormatFn.length - 1].date = '2024/01/01'

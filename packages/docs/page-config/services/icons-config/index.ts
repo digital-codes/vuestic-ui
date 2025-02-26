@@ -28,11 +28,9 @@ export default definePageConfig({
   head: {
     link: [
       { rel: 'dns-prefetch', as: 'script', href: 'https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js' },
-      { rel: 'dns-prefetch', as: 'script', href: 'https://kit.fontawesome.com/5460c87b2a.js' },
     ],
 
     script: [
-      { crossorigin: 'anonymous', src: 'https://kit.fontawesome.com/5460c87b2a.js' },
       { type: 'module', src: 'https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js' },
     ],
   },
@@ -65,6 +63,10 @@ export default definePageConfig({
     block.headline("Vuestic component aliases"),
     block.paragraph("We use some icons in our components by default. You can redefine them by changing it's alias."),
     block.component("icon-aliases"),
+
+    block.headline("How to redefine default icons"),
+    block.paragraph("Here's how you can use aliases to redefine default Vuestic icons in case you're using your own icon solution."),
+    block.code("redefine-icons"),
 
     // setup
     block.subtitle("Let's build our config"),

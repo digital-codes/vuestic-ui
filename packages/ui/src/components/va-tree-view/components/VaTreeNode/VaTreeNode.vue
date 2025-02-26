@@ -17,7 +17,7 @@
     <div class="va-tree-node-root">
       <div class="va-tree-node-content" :class="indentClassComputed" @click="onNodeClick('node')">
         <div
-          v-if="$props.node.hasChildren"
+          v-if="$props.node.hasChildren && $props.expandable"
           class="va-tree-node-content__item va-tree-node-content__item--leaf"
           @click.stop="onNodeClick('leaf')"
         >
@@ -37,6 +37,7 @@
             <va-checkbox
               :model-value="$props.node.checked"
               :color="colorComputed"
+              :disabled="!!$props.node.disabled || $props.disabled"
               indeterminate
               @update:model-value="(v) => toggleCheckbox($props.node, v)"
               class="va-tree-node__checkbox"
@@ -62,6 +63,8 @@
       <va-tree-node
         v-for="childNode in $props.node.children"
         :key="getTrackBy(childNode)"
+        :disabled="$props.node.disabled || $props.disabled"
+        :expandable="$props.expandable"
         :node="childNode"
       >
         <template v-for="(_, name) in $slots" :key="name" v-slot:[name]="slotScope: any">
@@ -75,10 +78,11 @@
 <script lang="ts">
 import { computed, PropType } from 'vue'
 
-import { useBem, useStrictInject } from '../../../../composables'
+import { useBem } from '../../../../composables'
 
 import { VaIcon, VaCheckbox } from '../../../'
 import { TreeViewKey, TreeNode } from '../../types'
+import { strictInject } from '../../../../utils/strict-inject'
 
 const INJECTION_ERROR_MESSAGE = 'The VaTreeNode component should be used in the context of VaTreeView component'
 </script>
@@ -94,6 +98,14 @@ const props = defineProps({
     type: Object as PropType<TreeNode>,
     required: true,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  expandable: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const {
@@ -108,7 +120,7 @@ const {
   toggleCheckbox,
   getNodeProperty,
   handleKeyboardNavigation,
-} = useStrictInject(TreeViewKey, INJECTION_ERROR_MESSAGE)
+} = strictInject(TreeViewKey, INJECTION_ERROR_MESSAGE)
 
 const labelComputed = computed(() => getText(props.node) || '')
 const isExpandedComputed = computed(() => props.node.hasChildren ? !!props.node.expanded : undefined)
@@ -128,7 +140,7 @@ const expandedClassComputed = useBem('va-tree-node-children', () => ({
 }))
 
 const indentClassComputed = useBem('va-tree-node-content', () => ({
-  indent: props.node.hasChildren === false,
+  indent: props.node.hasChildren === false && props.expandable,
 }))
 
 const cursorClassComputed = useBem('va-tree-node-content', () => ({

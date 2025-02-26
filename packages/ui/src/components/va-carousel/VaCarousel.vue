@@ -104,6 +104,7 @@ import {
   useStateful, useStatefulProps, useStatefulEmits,
   useSwipe, useSwipeProps, useComponentPresetProp,
   useTranslation, useTranslationProp, useNumericProp,
+  makeNumericProp,
 } from '../../composables'
 
 import { VaImage } from '../va-image'
@@ -135,8 +136,8 @@ const props = defineProps({
 
     // Animations
   autoscroll: { type: Boolean, default: false },
-  autoscrollInterval: { type: [Number, String], default: 5000 },
-  autoscrollPauseDuration: { type: [Number, String], default: 2000 },
+  autoscrollInterval: makeNumericProp({ default: 5000 }),
+  autoscrollPauseDuration: makeNumericProp({ default: 2000 }),
   infinite: { type: Boolean, default: true },
   fadeKeyframe: { type: String, default: 'va-carousel-fade-appear 1s' },
 
@@ -167,7 +168,7 @@ const props = defineProps({
 
 const emit = defineEmits([...useStatefulEmits])
 
-const { valueComputed: currentSlide } = useStateful(props, emit, 'modelValue')
+const currentSlide = useStateful(props, emit, 'modelValue')
 const autoscrollIntervalComputed = useNumericProp('autoscrollInterval')
 const autoscrollPauseDurationComputed = useNumericProp('autoscrollPauseDuration')
 const ratioComputed = useNumericProp('ratio')

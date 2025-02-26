@@ -1,5 +1,6 @@
 <template>
   <div
+    :key="doShowLoader + ''"
     class="docs-layout"
     :class="[`docs-layout--theme-${currentPresetName}`]"
   >
@@ -44,7 +45,7 @@ const breakpoints = useBreakpoint()
 
 const { currentPresetName } = useColors()
 
-const isSidebarVisible = ref(!breakpoints.smDown)
+const isSidebarVisible = ref(false)
 const isOptionsVisible = ref(false)
 const doShowLoader = ref(true)
 
@@ -54,9 +55,7 @@ watch(() => breakpoints.smDown, (newValue: boolean) => {
 })
 
 const { afterEach } = useRouter()
-const { scrollToElement } = useDocsScroll()
 afterEach(() => {
-  scrollToElement()
   isSidebarVisible.value = !breakpoints.smDown
   isOptionsVisible.value = false
 })
@@ -75,11 +74,10 @@ const onMouseMove = (e: MouseEvent) => {
 }
 
 onMounted(() => {
-  scrollToElement()
   isSidebarVisible.value = !breakpoints.smDown
-  setTimeout(() => {
-    doShowLoader.value = false
-  }, 300);
+  // setTimeout(() => {
+  doShowLoader.value = false
+  // }, 300);
 
   if (window.localStorage.getItem('eventConfig')) {
     window.localStorage.setItem('eventConfig', 'none')
@@ -113,7 +111,6 @@ useHead({
     { href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css", rel: "stylesheet" },
   ],
   script: [
-    { src: 'https://kit.fontawesome.com/5460c87b2a.js', crossorigin: 'anonymous' },
     { src: 'https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js', type: 'module' },
   ],
 })
@@ -138,54 +135,54 @@ html {
   position: relative;
   z-index: 0;
 
-  &--theme-halloween {
-    &::before {
-      content: '';
-      position: absolute;
-      height: 100%;
-      min-height: 100vh;
-      width: 100%;
-      background-image: url("https://i.imgur.com/rpnciUN.png");
-      background-size: 30%;
-      background-color: #000;
-      z-index: 0;
-      opacity: 0.5;
-    }
+  // &--theme-halloween {
+  //   &::before {
+  //     content: '';
+  //     position: absolute;
+  //     height: 100%;
+  //     min-height: 100vh;
+  //     width: 100%;
+  //     background-image: url("https://i.imgur.com/rpnciUN.png");
+  //     background-size: 30%;
+  //     background-color: #000;
+  //     z-index: 0;
+  //     opacity: 0.5;
+  //   }
 
-    &::after {
-      content: '';
-      position: fixed;
-      top: 0;
-      height: 100%;
-      width: 100%;
-      background: radial-gradient(circle at v-bind("mouse.x + 'px'") v-bind("mouse.y + 'px'"), transparent 0%, #000 v-bind("(mouseInertia.x + mouseInertia.y) * 0.5 + 'px'"));
-      background-size: 200%;
-      z-index: 0;
-      pointer-events: none;
-    }
+  //   &::after {
+  //     content: '';
+  //     position: fixed;
+  //     top: 0;
+  //     height: 100%;
+  //     width: 100%;
+  //     background: radial-gradient(circle at v-bind("mouse.x + 'px'") v-bind("mouse.y + 'px'"), transparent 0%, #000 v-bind("(mouseInertia.x + mouseInertia.y) * 0.5 + 'px'"));
+  //     background-size: 200%;
+  //     z-index: 0;
+  //     pointer-events: none;
+  //   }
 
-    .docs-layout__loader {
-      // Halloween loader
-      background-image: url("https://i.imgur.com/yLvFZoB.png");
-      background-position: center;
-      background-repeat: no-repeat;
-      animation: background-jump 1s infinite;
-    }
+  //   .docs-layout__loader {
+  //     // Halloween loader
+  //     background-image: url("https://i.imgur.com/yLvFZoB.png");
+  //     background-position: center;
+  //     background-repeat: no-repeat;
+  //     animation: background-jump 1s infinite;
+  //   }
 
-    .docs-sidebar {
-      // Halloween background
-      background-image: url("https://i.imgur.com/fLEstk9.png");
-      background-repeat: no-repeat;
-      background-blend-mode: multiply;
-    }
+  //   .docs-sidebar {
+  //     // Halloween background
+  //     background-image: url("https://i.imgur.com/fLEstk9.png");
+  //     background-repeat: no-repeat;
+  //     background-blend-mode: multiply;
+  //   }
 
-    .docs-header {
-      // Halloween background
-      background-image: url("https://i.imgur.com/BNkuj2J.png");
-      background-position: center;
-      background-blend-mode: multiply;
-    }
-  }
+  //   .docs-header {
+  //     // Halloween background
+  //     background-image: url("https://i.imgur.com/BNkuj2J.png");
+  //     background-position: center;
+  //     background-blend-mode: multiply;
+  //   }
+  // }
 
   & > * {
     z-index: 1;

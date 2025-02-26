@@ -4,6 +4,7 @@ import VaDataTableDemo from './VaDataTable.demo.vue'
 import { VaDataTable } from '..'
 import { VaPagination } from '../va-pagination'
 import { StoryFn } from '@storybook/vue3'
+import { defineStory } from '../../../.storybook/types'
 
 export default {
   title: 'VaDataTable',
@@ -227,4 +228,126 @@ export const NoFilteredDataText = () => ({
   template: `
     <VaDataTable :items="[{ name: 'BbB' }]" :columns="columns" filter="Aaa" no-data-filtered-html="Test no filtered data" />
   `,
+})
+
+export const ExpandableRowFilter = () => ({
+  components: { VaDataTable, VaPagination },
+  data () {
+    const items = [
+      {
+        id: 1,
+        name: 'Leanne Graham',
+        username: 'Bret',
+        email: 'Sincere@april.biz',
+        phone: '1-770-736-8031',
+        website: 'hildegard.org',
+      },
+      {
+        id: 2,
+        name: 'Ervin Howell',
+        username: 'Antonette',
+        email: 'Shanna@melissa.tv',
+        phone: '010-692-6593',
+        website: 'anastasia.net',
+      },
+      {
+        id: 3,
+        name: 'Clementine Bauch',
+        username: 'Samantha',
+        email: 'Nathan@yesenia.net',
+        phone: '1-463-123-4447',
+        website: 'ramiro.info',
+      },
+      {
+        id: 4,
+        name: 'Patricia Lebsack',
+        username: 'Karianne',
+        email: 'Julianne.OConner@kory.org',
+        phone: '493-170-9623',
+        website: 'kale.biz',
+      },
+      {
+        id: 5,
+        name: 'Chelsey Dietrich',
+        username: 'Kamren',
+        email: 'Lucio_Hettinger@annie.ca',
+        phone: '(254)954-1289',
+        website: 'demarco.info',
+      },
+    ]
+
+    const columns = [
+      { key: 'name' },
+      { key: 'username' },
+      { key: 'email' },
+      { key: 'actions', width: 80 },
+    ]
+    const filter = ref('')
+
+    return {
+      items,
+      columns,
+      filter,
+    }
+  },
+
+  template: `
+    <input v-model="filter"/>
+    <VaDataTable
+      :items="items"
+      :columns="columns"
+      :filter="filter"
+    >
+      <template #cell(actions)="{ row, isExpanded }">
+          <button
+            @click="row.toggleRowDetails()"
+          >
+            {{ isExpanded ? 'Hide': 'More info' }}
+          </button>
+      </template>
+
+      <template #expandableRow="{ rowData }" >
+        <div>
+          {{ rowData }}
+        </div>
+      </template>
+    </VaDataTable>
+  `,
+})
+
+export const RowSlot = defineStory({
+  story: () => ({
+    components: { VaDataTable },
+    setup () {
+      const items = [
+        { name: 'Aaa', email: 'a', age: 12 },
+        { name: 'Bbb', email: 'b', age: 12 },
+        { name: 'Ccc', email: 'c', age: 12 },
+        { name: 'Ddd', email: 'd', age: 12 },
+        { name: 'Eee', email: 'e', age: 12 },
+      ]
+
+      const columns = defineVaDataTableColumns([
+        { key: 'name' },
+        { key: 'email' },
+        { key: 'age' },
+      ]) satisfies Columns
+
+      return {
+        items,
+        columns,
+      }
+    },
+    template: `
+      <VaDataTable :items="items" :columns="columns">
+        <template #row="{ rowData }">
+          <tr>
+            <td>{{ rowData.name }}</td>
+            <td>{{ rowData.email }}</td>
+            <td>{{ rowData.age }}</td>
+          </tr>
+        </template>
+      </VaDataTable>
+    `,
+  }),
 })

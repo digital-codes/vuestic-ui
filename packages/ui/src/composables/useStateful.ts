@@ -1,5 +1,5 @@
 import { ref, computed, watch, type PropType, type Ref, type WritableComputedRef } from 'vue'
-import { NOT_PROVIDED, useUserProvidedProp } from './useUserProvidedProp'
+import { useIsUserProvidedProp } from './std/internal/useUserProvidedProp'
 
 export type StatefulProps = {
   stateful: boolean
@@ -57,14 +57,15 @@ export const useStateful = <
   const { eventName, defaultValue } = options
   const event = (eventName || `update:${key.toString()}`) as `update:${Key}`
 
-  const passedProp = useUserProvidedProp(key, props)
+  const isUserProvidedProp = useIsUserProvidedProp(key)
 
   const defaultValuePassed = 'defaultValue' in options
 
+  // TODO: Prefer props[key] instead of defaultValue and remove defaultValue from options
   const valueState = ref(
-    passedProp.value === NOT_PROVIDED
-      ? defaultValuePassed ? defaultValue : props[key]
-      : passedProp.value,
+    isUserProvidedProp.value
+      ? props[key]
+      : defaultValuePassed ? defaultValue : props[key],
   ) as Ref<P[Key]>
 
   let unwatchModelValue: ReturnType<typeof watch>
@@ -78,26 +79,26 @@ export const useStateful = <
     stateful ? watchModelValue() : unwatchModelValue?.()
   }, { immediate: true })
 
-  const valueComputed = computed({
+  const statefulValue = computed({
     get: () => {
       if (props.stateful) { return valueState.value }
 
       return props[key]
     },
     set: (value) => {
-      if (props.stateful) { valueState.value = value }
+      if (props.stateful && statefulValue.value !== value) { valueState.value = value }
 
       emit(event, value)
     },
   }) as StatefulValue<P[Key]>
 
-  Object.defineProperty(valueComputed, 'stateful', {
+  Object.defineProperty(statefulValue, 'stateful', {
     get: () => props.stateful,
   })
 
-  Object.defineProperty(valueComputed, 'userProvided', {
-    get: () => passedProp.value !== NOT_PROVIDED,
+  Object.defineProperty(statefulValue, 'userProvided', {
+    get: () => isUserProvidedProp.value,
   })
 
-  return { valueComputed }
+  return statefulValue
 }

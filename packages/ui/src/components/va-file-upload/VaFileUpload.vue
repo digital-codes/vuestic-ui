@@ -51,7 +51,7 @@
     <va-modal
       v-model="modal"
       hide-default-actions
-      :message="tp('$t:fileTypeIncorrect')"
+      :message="tp(fileIncorrectMessage)"
     />
   </div>
 </template>
@@ -59,7 +59,7 @@
 <script lang="ts">
 import { computed, onMounted, ref, toRef, shallowRef, provide, PropType, ComputedRef } from 'vue'
 
-import { useColors, useComponentPresetProp, useBem, useTranslation, useTranslationProp, useNumericProp } from '../../composables'
+import { useColors, useComponentPresetProp, useBem, useTranslation, useTranslationProp, useNumericProp, makeNumericProp } from '../../composables'
 
 import { VaFileUploadKey, VaFile } from './types'
 
@@ -85,7 +85,7 @@ const props = defineProps({
   color: { type: String, default: 'primary' },
   disabled: { type: Boolean, default: false },
   undo: { type: Boolean, default: false },
-  undoDuration: { type: [Number, String], default: 3000 },
+  undoDuration: makeNumericProp({ default: 3000 }),
   undoButtonText: useTranslationProp('$t:undo'),
   dropZoneText: useTranslationProp('$t:dropzone'),
   uploadButtonText: useTranslationProp('$t:uploadFile'),
@@ -240,7 +240,6 @@ const fileUploadListProps = filterComponentProps(VaFileUploadListProps)
 
     &__button {
       margin: var(--va-file-upload-dropzone-field-button-margin);
-      z-index: 10;
     }
 
     &__text {

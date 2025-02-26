@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<ValidationEmits & StatefulEmits<T>>()
 
-const { valueComputed } = useStateful(props, emit, 'modelValue')
+const valueComputed = useStateful(props, emit, 'modelValue')
 
 const reset = () => {
   valueComputed.value = (props.clearValue as any)
@@ -95,7 +95,7 @@ watchEffect(() => {
 })
 
 const makeSlotRef = () => {
-  return new Proxy(innerValue, {
+  return new Proxy(innerValue as any, {
     get (v, key) {
       if (key === 'ref') {
         return innerValue.value

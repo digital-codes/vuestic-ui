@@ -56,10 +56,11 @@ import {
   useFormFieldProps,
   useValidation, useValidationProps, useValidationEmits,
   useEmitProxy,
-  useClearable, useClearableProps, useClearableEmits,
+  useClearableControl, useClearableControlProps, useClearableControlEmits,
   useTranslation, useTranslationProp,
   useStateful, useStatefulProps, useStatefulEmits, useDeprecatedCondition,
-  useFocusable, useFocusableProps, useEvent,
+  useFocusableControl, useFocusableControlProps, useFocusableControlEmits,
+  useEvent,
 } from '../../composables'
 import type { ValidationProps } from '../../composables/useValidation'
 
@@ -68,13 +69,12 @@ import type { AnyStringPropType } from '../../utils/types/prop-type'
 import { VaInputWrapper } from '../va-input-wrapper'
 import { VaIcon } from '../va-icon'
 import { combineFunctions } from '../../utils/combine-functions'
-import { omit } from '../../utils/omit'
 import { pick } from '../../utils/pick'
 
 const VaInputWrapperProps = extractComponentProps(VaInputWrapper)
 
 const { createEmits: createInputEmits, createListeners: createInputListeners } = useEmitProxy(
-  ['change', 'keyup', 'keypress', 'keydown', 'focus', 'blur', 'input'],
+  ['change', 'keyup', 'keypress', 'keydown', 'input'],
 )
 
 const { createEmits: createFieldEmits, createListeners: createFieldListeners } = useEmitProxy([
@@ -95,9 +95,9 @@ defineOptions({
 const props = defineProps({
   ...VaInputWrapperProps,
   ...useFormFieldProps,
-  ...useFocusableProps,
+  ...useFocusableControlProps,
   ...useValidationProps as ValidationProps<string>,
-  ...useClearableProps,
+  ...useClearableControlProps,
   ...useComponentPresetProp,
   ...useStatefulProps,
 
@@ -122,10 +122,11 @@ const props = defineProps({
 const emit = defineEmits([
   'update:modelValue',
   ...useValidationEmits,
-  ...useClearableEmits,
+  ...useClearableControlEmits,
   ...createInputEmits(),
   ...createFieldEmits(),
   ...useStatefulEmits,
+  ...useFocusableControlEmits,
 ])
 
 useDeprecatedCondition([
@@ -134,7 +135,7 @@ useDeprecatedCondition([
 
 const input = shallowRef<HTMLInputElement>()
 
-const { valueComputed } = useStateful(props, emit, 'modelValue')
+const valueComputed = useStateful(props, emit, 'modelValue')
 
 const reset = () => withoutValidation(() => {
   valueComputed.value = props.clearValue
@@ -142,7 +143,7 @@ const reset = () => withoutValidation(() => {
   resetValidation()
 })
 
-const { focus, blur } = useFocusable(input, props)
+const { focus, blur } = useFocusableControl(input, props, emit)
 
 const slots = useSlots()
 
@@ -170,13 +171,13 @@ const { modelValue } = toRefs(props)
 const {
   canBeCleared,
   clearIconProps,
-} = useClearable(props, modelValue, input, computedError)
+} = useClearableControl(props, input, computedError)
 
 const inputListeners = createInputListeners(emit)
 
 const inputEvents = {
   ...inputListeners,
-  onBlur: combineFunctions(onBlur, inputListeners.onBlur),
+  onBlur,
 }
 
 const setInputValue = (newValue: string) => {

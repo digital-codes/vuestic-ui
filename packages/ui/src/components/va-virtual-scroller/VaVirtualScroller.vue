@@ -34,7 +34,7 @@
 <script lang="ts" setup generic="Item">
 import { ref, computed, watch, PropType, ComputedRef } from 'vue'
 
-import { useEvent, useBem, useTrackBy, useTrackByProps, useNumericProp } from '../../composables'
+import { useEvent, useBem, useTrackBy, useTrackByProps, useNumericProp, makeNumericProp } from '../../composables'
 import { useVirtualScrollerSizes, useVirtualScrollerSizesProps } from './useVirtualScrollerSizes'
 import { pick } from '../../utils/pick'
 
@@ -46,7 +46,7 @@ const props = defineProps({
   ...useTrackByProps,
   ...useVirtualScrollerSizesProps,
   items: { type: Array as PropType<Item[]>, default: () => ([]) },
-  bench: { type: [Number, String], default: 10, validator: (v: number | string) => Number(v) >= 0 },
+  bench: makeNumericProp({ default: 10, validator: (v: number | string) => Number(v) >= 0 }),
   disabled: { type: Boolean, default: false },
   table: { type: Boolean, default: false },
 })
@@ -66,7 +66,7 @@ if (!props.disabled) { useEvent('scroll', handleScroll, true) }
 const { list, wrapper, itemSize, wrapperSize } = useVirtualScrollerSizes(props, listScrollPosition)
 
 const { getKey } = useTrackBy(props)
-const uniqueKey = (item: Array<any> | Record<string, any>, index: number, defaultValue?: any) => getKey(item, index, defaultValue)
+const uniqueKey = getKey
 
 watch(listScrollPosition, (newValue) => {
   if (newValue + wrapperSize.value === containerSize.value) {

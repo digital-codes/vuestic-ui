@@ -1,9 +1,9 @@
 <template>
   <div
-    :key="isMounted + ''"
+    :key="doShowLoader + ''"
   >
     <div
-      v-if="!isMounted"
+      v-show="doShowLoader"
       class="docs-layout__loader"
     />
     <VaLayout
@@ -38,8 +38,6 @@
 </template>
 
 <script setup lang="ts">
-import { useIsMounted } from 'vuestic-ui/src/composables/useIsMounted'
-
 const breakpoints = useBreakpoint()
 
 const isSidebarVisible = ref(false)
@@ -70,12 +68,17 @@ useHead({
     { href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css", rel: "stylesheet" },
   ],
   script: [
-    { src: 'https://kit.fontawesome.com/5460c87b2a.js', crossorigin: 'anonymous' },
     { src: 'https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js', type: 'module' },
   ],
 })
 
-const isMounted = useIsMounted()
+const doShowLoader = ref(true)
+
+onMounted(() => {
+  setTimeout(() => {
+    doShowLoader.value = false
+  }, 300)
+})
 </script>
 
 <style lang="scss">

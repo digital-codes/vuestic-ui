@@ -91,7 +91,7 @@ const emit = defineEmits([...useStatefulEmits])
 
 const splitPanelsContainer = shallowRef<HTMLElement>()
 
-const { valueComputed } = useStateful(props, emit)
+const valueComputed = useStateful(props, emit)
 
 const containerSize = ref()
 const bodyFontSize = ref(16)
@@ -102,7 +102,7 @@ const handleContainerResize = () => {
   bodyFontSize.value = parseFloat(getComputedStyle(document.documentElement).fontSize)
 }
 onMounted(handleContainerResize)
-useResizeObserver([splitPanelsContainer], handleContainerResize)
+useResizeObserver(splitPanelsContainer, handleContainerResize)
 
 const convertToPercents = (v: string | number, type: 'min' | 'max' | 'snapping') => {
   let numberValue = ''
